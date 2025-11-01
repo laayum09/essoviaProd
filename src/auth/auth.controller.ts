@@ -29,6 +29,32 @@ export class AuthController {
     return { discordAuthUrl, robloxAuthUrl };
   }
 
+  @Get('/account-creation')
+async accountCreation() {
+  try {
+    const discordAuthUrl =
+      `${process.env.DISCORD_AUTH_URL}?client_id=${process.env.DISCORD_CLIENT_ID}` +
+      `&response_type=code` +
+      `&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI!)}` +
+      `&scope=identify+openid`;
+
+    const robloxAuthUrl =
+      `${process.env.ROBLOX_AUTH_URL}?client_id=${process.env.ROBLOX_CLIENT_ID}` +
+      `&response_type=code` +
+      `&redirect_uri=${encodeURIComponent(process.env.ROBLOX_REDIRECT_URI!)}` +
+      `&scope=openid+profile`;
+
+    return {
+      success: true,
+      discordAuthUrl,
+      robloxAuthUrl,
+    };
+  } catch (err) {
+    console.error('Account creation failed:', err);
+    throw new InternalServerErrorException('Account creation route failed');
+  }
+}
+
   // Step 2: Discord OAuth callback
   @Get('discord/callback')
   async discordCallback(@Query('code') code: string) {
