@@ -5,8 +5,10 @@
 // -------------------------------------------
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
+
 
 datasource db {
   provider = "mongodb"
@@ -90,3 +92,4 @@ model Purchase {
   user    User    @relation("userPurchases", fields: [databaseId], references: [databaseId])
   product Product @relation("productPurchases", fields: [productId], references: [productId])
 }
+
