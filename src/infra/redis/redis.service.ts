@@ -1,43 +1,34 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Redis } from '@upstash/redis';
 
 @Injectable()
-export class CacheService {
-  private readonly logger = new Logger(CacheService.name);
+export class RedisService {
+  private readonly client: Redis;
 
-  constructor(@Inject('REDIS_CLIENT') private readonly redis: Redis) {}
+  constructor() {
+    this.client = new Redis({
+      url: process.env.REDIS_URL!,
+      token: process.env.REDIS_TOKEN!,
+    });
+  }
 
-  async set<T = any>(key: string, value: T, ttlSeconds = 3600): Promise<void> {
-    try {
-      await this.redis.set(key, JSON.stringify(value), { ex: ttlSeconds });
-    } catch (err) {
-      this.logger.error(`Redis SET error for ${key}: ${err.message}`);
+  async get(key: string): Promise<string | null> {
+    return await this.client.get<string>(key);
+  }
+
+  async set(key: string, value: any, ttlSeconds?: number) {
+    if (ttlSeconds) {
+      await this.client.set(key, JSON.stringify(value), { ex: ttlSeconds });
+    } else {
+      await this.client.set(key, JSON.stringify(value));
     }
   }
 
-  async get<T = any>(key: string): Promise<T | null> {
+  async ping(): Promise<string> {
     try {
-      const val = await this.redis.get<string>(key);
-      return val ? JSON.parse(val) : null;
-    } catch (err) {
-      this.logger.error(`Redis GET error for ${key}: ${err.message}`);
-      return null;
-    }
-  }
-
-  async del(key: string): Promise<void> {
-    try {
-      await this.redis.del(key);
-    } catch (err) {
-      this.logger.error(`Redis DEL error for ${key}: ${err.message}`);
-    }
-  }
-
-  async clearAll(): Promise<void> {
-    try {
-      await this.redis.flushdb();
-    } catch (err) {
-      this.logger.error(`Redis FLUSHDB error: ${err.message}`);
+      return await this.client.ping();
+    } catch {
+      return 'ERROR';
     }
   }
 }

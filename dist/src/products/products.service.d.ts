@@ -10,8 +10,8 @@ export declare class ProductsService {
         fileUrl?: string;
     }): Promise<{
         id: string;
-        name: string;
         productId: string;
+        name: string;
         priceR: number | null;
         priceC: number | null;
         whitelisted: boolean;
@@ -19,8 +19,8 @@ export declare class ProductsService {
     }>;
     update(productId: string, data: any): Promise<{
         id: string;
-        name: string;
         productId: string;
+        name: string;
         priceR: number | null;
         priceC: number | null;
         whitelisted: boolean;
@@ -31,8 +31,8 @@ export declare class ProductsService {
     }>;
     list(): Promise<{
         id: string;
-        name: string;
         productId: string;
+        name: string;
         priceR: number | null;
         priceC: number | null;
         whitelisted: boolean;

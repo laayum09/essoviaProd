@@ -19,38 +19,58 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const axios_1 = __importDefault(require("axios"));
 let AuthController = class AuthController {
-    start() {
-        const discordAuthUrl = `${process.env.DISCORD_AUTH_URL}` +
-            `?client_id=${process.env.DISCORD_CLIENT_ID}` +
+    start(res, provider) {
+        const discordAuthUrl = `${process.env.DISCORD_AUTH_URL}?client_id=${process.env.DISCORD_CLIENT_ID}` +
             `&response_type=code` +
             `&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}` +
-            `&scope=identify`;
-        const robloxAuthUrl = `${process.env.ROBLOX_AUTH_URL}` +
-            `?client_id=${process.env.ROBLOX_CLIENT_ID}` +
+            `&scope=identify+openid`;
+        const robloxAuthUrl = `${process.env.ROBLOX_AUTH_URL}?client_id=${process.env.ROBLOX_CLIENT_ID}` +
             `&response_type=code` +
             `&redirect_uri=${encodeURIComponent(process.env.ROBLOX_REDIRECT_URI)}` +
-            `&scope=openid%20profile`;
-        return { discordAuthUrl, robloxAuthUrl };
+            `&scope=openid+profile`;
+        if (provider === 'roblox')
+            return res.redirect(robloxAuthUrl);
+        return res.redirect(discordAuthUrl);
+    }
+    async accountCreation() {
+        try {
+            const discordAuthUrl = `${process.env.DISCORD_AUTH_URL}?client_id=${process.env.DISCORD_CLIENT_ID}` +
+                `&response_type=code` +
+                `&redirect_uri=${encodeURIComponent(process.env.DISCORD_REDIRECT_URI)}` +
+                `&scope=identify+openid`;
+            const robloxAuthUrl = `${process.env.ROBLOX_AUTH_URL}?client_id=${process.env.ROBLOX_CLIENT_ID}` +
+                `&response_type=code` +
+                `&redirect_uri=${encodeURIComponent(process.env.ROBLOX_REDIRECT_URI)}` +
+                `&scope=openid+profile`;
+            return {
+                success: true,
+                discordAuthUrl,
+                robloxAuthUrl,
+            };
+        }
+        catch (err) {
+            console.error('Account creation failed:', err);
+            throw new common_1.InternalServerErrorException('Account creation route failed');
+        }
     }
     async discordCallback(code) {
         if (!code)
             throw new common_1.BadRequestException('Missing Discord code');
         try {
-            const token = await axios_1.default
-                .post(process.env.DISCORD_TOKEN_URL, new URLSearchParams({
+            const tokenResponse = await axios_1.default.post(process.env.DISCORD_TOKEN_URL, new URLSearchParams({
                 client_id: process.env.DISCORD_CLIENT_ID,
                 client_secret: process.env.DISCORD_CLIENT_SECRET,
                 grant_type: 'authorization_code',
                 code,
                 redirect_uri: process.env.DISCORD_REDIRECT_URI,
-            }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                .then((r) => r.data);
-            const user = await axios_1.default
-                .get(process.env.DISCORD_USER_URL, {
-                headers: { Authorization: `Bearer ${token.access_token}` },
-            })
-                .then((r) => r.data);
-            return { discordId: user.id, discordUsername: user.username };
+            }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+            const userResponse = await axios_1.default.get(process.env.DISCORD_USER_URL, {
+                headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
+            });
+            return {
+                discordId: userResponse.data.id,
+                discordUsername: userResponse.data.username,
+            };
         }
         catch (err) {
             console.error('Discord OAuth failed:', err);
@@ -61,23 +81,19 @@ let AuthController = class AuthController {
         if (!code)
             throw new common_1.BadRequestException('Missing Roblox code');
         try {
-            const token = await axios_1.default
-                .post(process.env.ROBLOX_TOKEN_URL, new URLSearchParams({
+            const tokenResponse = await axios_1.default.post(process.env.ROBLOX_TOKEN_URL, new URLSearchParams({
                 client_id: process.env.ROBLOX_CLIENT_ID,
                 client_secret: process.env.ROBLOX_CLIENT_SECRET,
                 grant_type: 'authorization_code',
                 code,
                 redirect_uri: process.env.ROBLOX_REDIRECT_URI,
-            }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                .then((r) => r.data);
-            const user = await axios_1.default
-                .get(process.env.ROBLOX_USER_URL, {
-                headers: { Authorization: `Bearer ${token.access_token}` },
-            })
-                .then((r) => r.data);
+            }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+            const userResponse = await axios_1.default.get(process.env.ROBLOX_USER_URL, {
+                headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
+            });
             return {
-                robloxId: String(user.id || user.userId || user.sub),
-                robloxUsername: user.name || user.username || 'unknown',
+                robloxId: String(userResponse.data.id || userResponse.data.userId || userResponse.data.sub),
+                robloxUsername: userResponse.data.name || userResponse.data.username || 'unknown',
             };
         }
         catch (err) {
@@ -89,10 +105,18 @@ let AuthController = class AuthController {
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Get)('start'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Query)('provider')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "start", null);
+__decorate([
+    (0, common_1.Get)('account-creation'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "accountCreation", null);
 __decorate([
     (0, common_1.Get)('discord/callback'),
     __param(0, (0, common_1.Query)('code')),

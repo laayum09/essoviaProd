@@ -8,12 +8,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoggerModule = void 0;
 const common_1 = require("@nestjs/common");
+const nest_winston_1 = require("nest-winston");
+const winston_logger_1 = require("./winston.logger");
 const logger_service_1 = require("./logger.service");
 let LoggerModule = class LoggerModule {
 };
 exports.LoggerModule = LoggerModule;
 exports.LoggerModule = LoggerModule = __decorate([
+    (0, common_1.Global)(),
     (0, common_1.Module)({
+        imports: [nest_winston_1.WinstonModule.forRoot(winston_logger_1.winstonOptions)],
         providers: [logger_service_1.LoggerService],
         exports: [logger_service_1.LoggerService],
     })

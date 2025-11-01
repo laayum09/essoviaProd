@@ -8,59 +8,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
-var CacheService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CacheService = void 0;
+exports.RedisService = void 0;
 const common_1 = require("@nestjs/common");
 const redis_1 = require("@upstash/redis");
-let CacheService = CacheService_1 = class CacheService {
-    redis;
-    logger = new common_1.Logger(CacheService_1.name);
-    constructor(redis) {
-        this.redis = redis;
-    }
-    async set(key, value, ttlSeconds = 3600) {
-        try {
-            await this.redis.set(key, JSON.stringify(value), { ex: ttlSeconds });
-        }
-        catch (err) {
-            this.logger.error(`Redis SET error for ${key}: ${err.message}`);
-        }
+let RedisService = class RedisService {
+    client;
+    constructor() {
+        this.client = new redis_1.Redis({
+            url: process.env.REDIS_URL,
+            token: process.env.REDIS_TOKEN,
+        });
     }
     async get(key) {
-        try {
-            const val = await this.redis.get(key);
-            return val ? JSON.parse(val) : null;
+        return await this.client.get(key);
+    }
+    async set(key, value, ttlSeconds) {
+        if (ttlSeconds) {
+            await this.client.set(key, JSON.stringify(value), { ex: ttlSeconds });
         }
-        catch (err) {
-            this.logger.error(`Redis GET error for ${key}: ${err.message}`);
-            return null;
+        else {
+            await this.client.set(key, JSON.stringify(value));
         }
     }
-    async del(key) {
+    async ping() {
         try {
-            await this.redis.del(key);
+            return await this.client.ping();
         }
-        catch (err) {
-            this.logger.error(`Redis DEL error for ${key}: ${err.message}`);
-        }
-    }
-    async clearAll() {
-        try {
-            await this.redis.flushdb();
-        }
-        catch (err) {
-            this.logger.error(`Redis FLUSHDB error: ${err.message}`);
+        catch {
+            return 'ERROR';
         }
     }
 };
-exports.CacheService = CacheService;
-exports.CacheService = CacheService = CacheService_1 = __decorate([
+exports.RedisService = RedisService;
+exports.RedisService = RedisService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)('REDIS_CLIENT')),
-    __metadata("design:paramtypes", [redis_1.Redis])
-], CacheService);
+    __metadata("design:paramtypes", [])
+], RedisService);
 //# sourceMappingURL=redis.service.js.map

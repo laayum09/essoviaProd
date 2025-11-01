@@ -20,9 +20,9 @@ export declare class WhitelistController {
     list(databaseId: string): Promise<{
         id: string;
         productId: string;
+        type: string;
         userDatabaseId: string;
         whitelistId: string;
-        type: string;
         userid: string;
     }[]>;
     revoke(whitelistId: string): Promise<{

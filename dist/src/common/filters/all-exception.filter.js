@@ -11,17 +11,17 @@ const common_1 = require("@nestjs/common");
 let AllExceptionsFilter = class AllExceptionsFilter {
     catch(exception, host) {
         const ctx = host.switchToHttp();
-        const response = ctx.getResponse();
-        const request = ctx.getRequest();
+        const res = ctx.getResponse();
+        const req = ctx.getRequest();
         const status = exception instanceof common_1.HttpException
             ? exception.getStatus()
             : common_1.HttpStatus.INTERNAL_SERVER_ERROR;
         const message = exception instanceof common_1.HttpException
             ? exception.getResponse()
-            : 'Internal server error';
-        response.status(status).json({
+            : exception?.message ?? 'Internal server error';
+        res.status(status).json({
             statusCode: status,
-            path: request.url,
+            path: req.url,
             message,
             timestamp: new Date().toISOString(),
         });

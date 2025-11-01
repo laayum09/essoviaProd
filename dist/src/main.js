@@ -36,27 +36,54 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv/config");
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
-const Sentry = __importStar(require("@sentry/node"));
-const profiling_node_1 = require("@sentry/profiling-node");
 const helmet_1 = __importDefault(require("helmet"));
+const compression_1 = __importDefault(require("compression"));
+const cors_1 = __importDefault(require("cors"));
 const common_1 = require("@nestjs/common");
-const sentry_exception_filter_1 = require("./common/filters/sentry-exception.filter");
+const nest_winston_1 = require("nest-winston");
+const winston_logger_1 = require("./infra/logger/winston.logger");
+const all_exception_filter_1 = require("./common/filters/all-exception.filter");
+const http = __importStar(require("http"));
+const Sentry = __importStar(require("@sentry/node"));
+const rate_limiter_flexible_1 = require("rate-limiter-flexible");
 async function bootstrap() {
-    Sentry.init({
-        dsn: process.env.SENTRY_DSN,
-        environment: process.env.SENTRY_ENVIRONMENT || 'development',
-        integrations: [(0, profiling_node_1.nodeProfilingIntegration)()],
-        tracesSampleRate: 1.0,
-        profilesSampleRate: 1.0,
+    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
+        bufferLogs: true,
+        logger: nest_winston_1.WinstonModule.createLogger(winston_logger_1.winstonOptions),
     });
-    const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.use((0, helmet_1.default)());
-    app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true }));
-    app.useGlobalFilters(new sentry_exception_filter_1.SentryExceptionFilter());
-    await app.listen(process.env.PORT || 3000);
-    console.log(`🚀 API running at http://localhost:${process.env.PORT || 3000}`);
+    app.use((0, helmet_1.default)({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+    app.use((0, compression_1.default)());
+    app.use((0, cors_1.default)({ origin: true, credentials: true }));
+    const limiter = new rate_limiter_flexible_1.RateLimiterMemory({ points: 10, duration: 1 });
+    app.use(async (req, res, next) => {
+        try {
+            await limiter.consume(req.ip);
+            next();
+        }
+        catch {
+            res.status(429).send('Too many requests');
+        }
+    });
+    app.useGlobalPipes(new common_1.ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalFilters(new all_exception_filter_1.AllExceptionsFilter());
+    app.use((req, res, next) => {
+        res.setHeader('Cache-Control', 'public, max-age=60');
+        next();
+    });
+    const port = Number(process.env.PORT ?? 8080);
+    const server = http.createServer(app.getHttpAdapter().getInstance());
+    server.keepAliveTimeout = 65000;
+    server.headersTimeout = 66000;
+    await app.listen(port, '0.0.0.0');
+    console.log(`✅ Essovia API running on port ${port}`);
 }
+Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    environment: process.env.SENTRY_ENVIRONMENT ?? 'production',
+    tracesSampleRate: 1.0,
+});
 bootstrap();
 //# sourceMappingURL=main.js.map

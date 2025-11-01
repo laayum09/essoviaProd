@@ -1,0 +1,35 @@
+import { z } from 'zod';
+export declare const envSchema: z.ZodObject<{
+    NODE_ENV: z.ZodDefault<z.ZodEnum<{
+        production: "production";
+        development: "development";
+        test: "test";
+    }>>;
+    PORT: z.ZodDefault<z.ZodCoercedNumber<unknown>>;
+    DATABASE_URL: z.ZodString;
+    JWT_SECRET: z.ZodString;
+    JWT_EXPIRES_IN: z.ZodDefault<z.ZodString>;
+    REDIS_URL: z.ZodOptional<z.ZodString>;
+    REDIS_TOKEN: z.ZodOptional<z.ZodString>;
+    DISCORD_CLIENT_ID: z.ZodString;
+    DISCORD_CLIENT_SECRET: z.ZodString;
+    DISCORD_REDIRECT_URI: z.ZodString;
+    DISCORD_AUTH_URL: z.ZodString;
+    DISCORD_TOKEN_URL: z.ZodString;
+    DISCORD_USER_URL: z.ZodString;
+    ROBLOX_CLIENT_ID: z.ZodString;
+    ROBLOX_CLIENT_SECRET: z.ZodString;
+    ROBLOX_REDIRECT_URI: z.ZodString;
+    ROBLOX_AUTH_URL: z.ZodString;
+    ROBLOX_TOKEN_URL: z.ZodString;
+    ROBLOX_USER_URL: z.ZodString;
+    CLOUDFLARE_R2_ACCESS_KEY_ID: z.ZodString;
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY: z.ZodString;
+    CLOUDFLARE_R2_BUCKET: z.ZodString;
+    CLOUDFLARE_R2_ACCOUNT_ID: z.ZodString;
+    CLOUDFLARE_R2_ENDPOINT: z.ZodString;
+    CLOUDFLARE_R2_PUBLIC_URL: z.ZodOptional<z.ZodString>;
+    SENTRY_DSN: z.ZodOptional<z.ZodString>;
+    SENTRY_ENVIRONMENT: z.ZodDefault<z.ZodString>;
+}, z.core.$strip>;
+export type AppEnv = z.infer<typeof envSchema>;

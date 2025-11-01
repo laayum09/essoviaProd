@@ -1,0 +1,70 @@
+{"context":"NestFactory","level":"info","message":"Starting Nest application..."}
+{"context":"InstanceLoader","level":"info","message":"AppModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"RedisModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"FilesModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PassportModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PrismaModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HttpModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"JwtModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"InfraModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryCoreModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"TerminusModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HealthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"UsersModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"AuthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ProductsModule dependencies initialized"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"ProductsController {/products}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:id, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:id, DELETE} route"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/start, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/account-creation, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/discord/callback, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/roblox/callback, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/complete, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:databaseId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route"}
+{"context":"InfraService","level":"error","message":"❌ MongoDB connection failed:","stack":[{"clientVersion":"6.18.0","code":"P2010","meta":{"code":"unknown","message":"Kind: Command failed: Error code 8000 (AtlasError): empty database name not allowed\n\tat 5fd8ad9aa04c526a7411cb1e852a8e1d/atlasproxy/session_proxy.go:720\n\tat 5fd8ad9aa04c526a7411cb1e852a8e1d/atlasproxy/session_proxy.go:1582\n\tat 5fd8ad9aa04c526a7411cb1e852a8e1d/atlasproxy/session_proxy.go:1189\n\tat 5fd8ad9aa04c526a7411cb1e852a8e1d/atlasproxy/session_proxy.go:1079\n\tat 10gen/mongonet@v0.0.0-20250630154432-dd69cb321965/proxy_session.go:392\n\tat 10gen/mongonet@v0.0.0-20250630154432-dd69cb321965/proxy_session.go:114\n\tat 10gen/mongonet@v0.0.0-20250630154432-dd69cb321965/session.go:220\n\tat 10gen/mongonet@v0.0.0-20250630154432-dd69cb321965/server.go:449\n\tat src/runtime/asm_arm64.s:1223, labels: {}"},"name":"PrismaClientKnownRequestError"}]}
+{"context":"InfraService","level":"info","message":"✅ Redis connected successfully"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started"}
+{"context":"NestFactory","level":"info","message":"Starting Nest application..."}
+{"context":"InstanceLoader","level":"info","message":"AppModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"RedisModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"FilesModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PassportModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PrismaModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HttpModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"JwtModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"InfraModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryCoreModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"TerminusModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HealthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"UsersModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"AuthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ProductsModule dependencies initialized"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"ProductsController {/products}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:id, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:id, DELETE} route"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/start, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/account-creation, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/discord/callback, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/roblox/callback, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/complete, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:databaseId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route"}
+{"context":"InfraService","level":"info","message":"✅ MongoDB connected successfully"}
+{"context":"InfraService","level":"info","message":"✅ Redis connected successfully"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started"}
