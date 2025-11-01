@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalFilters(new SentryExceptionFilter());
 
   await app.listen(process.env.PORT || 3000);
-  console.log(`🚀 API running at http://localhost:${process.env.PORT || 3000}`);
+  console.log(`🚀 API running! `);
 }
 
 bootstrap();
