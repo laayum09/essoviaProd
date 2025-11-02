@@ -27,6 +27,9 @@ let UsersController = class UsersController {
     async getUser(databaseId) {
         return this.users.findByDatabaseId(databaseId);
     }
+    async getFullUser(id) {
+        return this.users.findFullUser(id);
+    }
     async list() {
         return this.users.all();
     }
@@ -46,6 +49,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUser", null);
+__decorate([
+    (0, common_1.Get)('/full/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getFullUser", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

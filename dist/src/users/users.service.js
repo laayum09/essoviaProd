@@ -38,6 +38,70 @@ let UsersService = class UsersService {
             },
         });
     }
+    async findFullUser(id) {
+        return this.prisma.user.findUnique({
+            where: { id },
+            include: {
+                products: {
+                    include: {
+                        product: {
+                            include: {
+                                whitelists: {
+                                    select: {
+                                        id: true,
+                                        userid: true,
+                                        productId: true,
+                                        user: {
+                                            select: {
+                                                id: true,
+                                                discordId: true,
+                                                robloxId: true,
+                                            },
+                                        },
+                                        product: {
+                                            select: {
+                                                id: true,
+                                                name: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                whitelists: {
+                    select: {
+                        id: true,
+                        userid: true,
+                        productId: true,
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                                whitelisted: true,
+                            },
+                        },
+                    },
+                },
+                purchases: {
+                    include: {
+                        product: {
+                            include: {
+                                whitelists: {
+                                    select: {
+                                        id: true,
+                                        userid: true,
+                                        productId: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
+    }
     async findByDatabaseId(databaseId) {
         const user = await this.prisma.user.findUnique({ where: { databaseId } });
         if (!user)

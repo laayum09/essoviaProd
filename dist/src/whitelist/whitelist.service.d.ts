@@ -12,9 +12,9 @@ export declare class WhitelistService {
     listForUser(databaseId: string): Promise<{
         id: string;
         productId: string;
-        type: string;
-        userDatabaseId: string;
         whitelistId: string;
+        userDatabaseId: string;
+        type: string;
         userid: string;
     }[]>;
     revoke(whitelistId: string): Promise<{

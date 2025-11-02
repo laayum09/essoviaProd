@@ -16,6 +16,11 @@ export class UsersController {
     return this.users.findByDatabaseId(databaseId);
   }
 
+  @Get('/full/:id')
+async getFullUser(@Param('id') id: string) {
+  return this.users.findFullUser(id);
+}
+
   @Get()
   async list() {
     return this.users.all();
