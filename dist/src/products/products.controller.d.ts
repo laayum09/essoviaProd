@@ -10,6 +10,7 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }[]>;
@@ -21,6 +22,7 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -32,6 +34,7 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     } | null>;
@@ -43,6 +46,7 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

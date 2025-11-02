@@ -43,6 +43,7 @@ export declare class UsersController {
                 priceC: number | null;
                 whitelisted: boolean;
                 fileUrl: string | null;
+                version: string | null;
                 createdAt: Date;
                 updatedAt: Date;
             };
@@ -79,6 +80,7 @@ export declare class UsersController {
                 priceC: number | null;
                 whitelisted: boolean;
                 fileUrl: string | null;
+                version: string | null;
                 createdAt: Date;
                 updatedAt: Date;
             };

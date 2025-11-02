@@ -12,18 +12,41 @@ export class RedisService {
     });
   }
 
-  async get(key: string): Promise<string | null> {
-    return await this.client.get<string>(key);
-  }
-
-  async set(key: string, value: any, ttlSeconds?: number) {
-    if (ttlSeconds) {
-      await this.client.set(key, JSON.stringify(value), { ex: ttlSeconds });
-    } else {
-      await this.client.set(key, JSON.stringify(value));
+  /**
+   * Get a JSON-parsed value from Redis
+   */
+  async get<T = any>(key: string): Promise<T | null> {
+    const value = await this.client.get<string>(key);
+    if (!value) return null;
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as any;
     }
   }
 
+  /**
+   * Set a key with optional TTL (in seconds)
+   */
+  async set(key: string, value: any, ttlSeconds?: number) {
+    const json = JSON.stringify(value);
+    if (ttlSeconds) {
+      await this.client.set(key, json, { ex: ttlSeconds });
+    } else {
+      await this.client.set(key, json);
+    }
+  }
+
+  /**
+   * Delete a key
+   */
+  async del(key: string) {
+    await this.client.del(key);
+  }
+
+  /**
+   * Ping Redis
+   */
   async ping(): Promise<string> {
     try {
       return await this.client.ping();

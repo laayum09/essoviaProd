@@ -16,6 +16,7 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -27,6 +28,7 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }>;
@@ -41,6 +43,7 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        version: string | null;
         createdAt: Date;
         updatedAt: Date;
     }[]>;

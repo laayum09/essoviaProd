@@ -21,15 +21,27 @@ let RedisService = class RedisService {
         });
     }
     async get(key) {
-        return await this.client.get(key);
+        const value = await this.client.get(key);
+        if (!value)
+            return null;
+        try {
+            return JSON.parse(value);
+        }
+        catch {
+            return value;
+        }
     }
     async set(key, value, ttlSeconds) {
+        const json = JSON.stringify(value);
         if (ttlSeconds) {
-            await this.client.set(key, JSON.stringify(value), { ex: ttlSeconds });
+            await this.client.set(key, json, { ex: ttlSeconds });
         }
         else {
-            await this.client.set(key, JSON.stringify(value));
+            await this.client.set(key, json);
         }
+    }
+    async del(key) {
+        await this.client.del(key);
     }
     async ping() {
         try {

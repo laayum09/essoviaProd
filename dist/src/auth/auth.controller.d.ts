@@ -1,17 +1,11 @@
 import type { Response } from 'express';
+import { PrismaService } from '../infra/prisma/prisma.service';
+import { RedisService } from '../infra/redis/redis.service';
 export declare class AuthController {
+    private readonly prisma;
+    private readonly redis;
+    constructor(prisma: PrismaService, redis: RedisService);
     start(res: Response, provider?: string): void;
-    accountCreation(): Promise<{
-        success: boolean;
-        discordAuthUrl: string;
-        robloxAuthUrl: string;
-    }>;
-    discordCallback(code: string): Promise<{
-        discordId: any;
-        discordUsername: any;
-    }>;
-    robloxCallback(code: string): Promise<{
-        robloxId: string;
-        robloxUsername: any;
-    }>;
+    discordCallback(code: string, res: Response): Promise<void>;
+    robloxCallback(code: string, res: Response): Promise<void>;
 }
