@@ -10,6 +10,8 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
     create(body: any): Promise<{
         id: string;
@@ -19,6 +21,8 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     get(id: string): Promise<{
         id: string;
@@ -28,6 +32,8 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     } | null>;
     delete(id: string): Promise<{
         id: string;
@@ -37,5 +43,7 @@ export declare class ProductsController {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }

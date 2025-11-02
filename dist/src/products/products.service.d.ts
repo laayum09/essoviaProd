@@ -16,6 +16,8 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     update(productId: string, data: any): Promise<{
         id: string;
@@ -25,6 +27,8 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     delete(productId: string): Promise<{
         ok: boolean;
@@ -37,5 +41,7 @@ export declare class ProductsService {
         priceC: number | null;
         whitelisted: boolean;
         fileUrl: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }[]>;
 }
