@@ -21,6 +21,7 @@ const axios_1 = __importDefault(require("axios"));
 const prisma_service_1 = require("../infra/prisma/prisma.service");
 const id_util_1 = require("../common/utils/id.util");
 const redis_service_1 = require("../infra/redis/redis.service");
+const jwt_decode_1 = require("jwt-decode");
 let AuthController = class AuthController {
     prisma;
     redis;
@@ -66,7 +67,18 @@ let AuthController = class AuthController {
             throw new common_1.InternalServerErrorException('Discord authentication failed');
         }
     }
-    async robloxCallback(code, res) {
+    collectRoblox(discordId, username, res) {
+        if (!discordId || !username) {
+            return res.status(400).json({ error: 'Missing discordId or username' });
+        }
+        const robloxAuthUrl = `${process.env.ROBLOX_AUTH_URL}?client_id=${process.env.ROBLOX_CLIENT_ID}` +
+            `&response_type=code` +
+            `&redirect_uri=${encodeURIComponent(process.env.ROBLOX_REDIRECT_URI)}` +
+            `&scope=openid+profile` +
+            `&state=${encodeURIComponent(JSON.stringify({ discordId, username }))}`;
+        return res.redirect(robloxAuthUrl);
+    }
+    async robloxCallback(code, state, res) {
         if (!code)
             throw new common_1.BadRequestException('Missing Roblox code');
         try {
@@ -77,40 +89,52 @@ let AuthController = class AuthController {
                 code,
                 redirect_uri: process.env.ROBLOX_REDIRECT_URI,
             }), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-            const userResponse = await axios_1.default.get(process.env.ROBLOX_USER_URL, {
-                headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
-            });
-            const robloxId = String(userResponse.data.id || userResponse.data.userId || userResponse.data.sub);
-            const robloxUsername = userResponse.data.name || userResponse.data.username || 'unknown';
-            const discordId = userResponse.data.state || null;
-            let discordEntry = discordId
-                ? await this.redis.get(`link:${discordId}`)
-                : null;
-            if (!discordEntry) {
-                console.warn('⚠️ No pending Discord link found in Redis.');
-                return res.redirect('https://essovia.xyz/link-expired');
-            }
-            const { discordUsername } = discordEntry;
-            let databaseId = '';
-            do {
-                databaseId = (0, id_util_1.genBase36Id)(14);
-            } while (await this.prisma.user.findUnique({ where: { databaseId } }));
-            await this.prisma.user.create({
-                data: {
-                    databaseId,
-                    discordId,
-                    robloxId,
-                    credits: 0,
-                },
-            });
-            await this.redis.del(`link:${discordId}`);
-            console.log(`✅ Linked ${discordUsername} (${discordId}) ↔ ${robloxUsername} (${robloxId})`);
-            return res.redirect(`https://essovia.xyz/link-success?discordId=${discordId}&robloxId=${robloxId}`);
+            const idToken = tokenResponse.data.id_token;
+            const decoded = (0, jwt_decode_1.jwtDecode)(idToken);
+            const robloxId = decoded.sub;
+            const robloxUsername = decoded.name || decoded.preferred_username || 'unknown';
+            const discordInfo = state ? JSON.parse(state) : null;
+            return res?.redirect(`https://essovia.xyz/auth/completed?discordId=${discordInfo?.discordId}&robloxId=${robloxId}&robloxUsername=${robloxUsername}`);
         }
         catch (err) {
-            console.error('Roblox OAuth failed:', err);
+            console.error('Roblox OAuth failed:', err.response?.data || err.message);
             throw new common_1.InternalServerErrorException('Roblox authentication failed');
         }
+    }
+    async authCompleted(discordId, robloxId, robloxUsername) {
+        if (!discordId || !robloxId) {
+            throw new common_1.BadRequestException('Missing discordId or robloxId');
+        }
+        const redisDataRaw = await this.redis.get(`link:${discordId}`);
+        if (!redisDataRaw) {
+            throw new common_1.NotFoundException('Discord link expired or not found in Redis');
+        }
+        const redisData = JSON.parse(redisDataRaw);
+        const discordUsername = redisData.discordUsername;
+        const existingDiscord = await this.prisma.user.findUnique({ where: { discordId } });
+        if (existingDiscord)
+            throw new common_1.ConflictException('Discord account already linked');
+        const existingRoblox = await this.prisma.user.findUnique({ where: { robloxId } });
+        if (existingRoblox)
+            throw new common_1.ConflictException('Roblox account already linked');
+        let databaseId = '';
+        do {
+            databaseId = (0, id_util_1.genBase36Id)(14);
+        } while (await this.prisma.user.findUnique({ where: { databaseId } }));
+        const newUser = await this.prisma.user.create({
+            data: {
+                databaseId,
+                discordId,
+                robloxId,
+                credits: 0,
+            },
+        });
+        await this.redis.set(`link:${discordId}`, null, 1);
+        console.log(`✅ User linked: ${discordUsername} (${discordId}) ↔ ${robloxUsername} (${robloxId})`);
+        return {
+            message: 'User successfully linked and created',
+            user: newUser,
+        };
     }
 };
 exports.AuthController = AuthController;
@@ -131,13 +155,32 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "discordCallback", null);
 __decorate([
+    (0, common_1.Get)('collect-roblox'),
+    __param(0, (0, common_1.Query)('discordId')),
+    __param(1, (0, common_1.Query)('username')),
+    __param(2, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "collectRoblox", null);
+__decorate([
     (0, common_1.Get)('roblox/callback'),
     __param(0, (0, common_1.Query)('code')),
-    __param(1, (0, common_1.Res)()),
+    __param(1, (0, common_1.Query)('state')),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "robloxCallback", null);
+__decorate([
+    (0, common_1.Get)('completed'),
+    __param(0, (0, common_1.Query)('discordId')),
+    __param(1, (0, common_1.Query)('robloxId')),
+    __param(2, (0, common_1.Query)('robloxUsername')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "authCompleted", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Injectable)(),
     (0, common_1.Controller)('auth'),

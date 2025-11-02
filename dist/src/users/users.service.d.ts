@@ -4,9 +4,9 @@ export declare class UsersService {
     constructor(prisma: PrismaService);
     completeAccount(discordId: string, robloxId: string): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }>;
     findFullUser(id: string): Promise<({
@@ -84,16 +84,16 @@ export declare class UsersService {
         })[];
     } & {
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }) | null>;
     findByDatabaseId(databaseId: string): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }>;
     findByDiscordId(discordId: string): Promise<({
@@ -113,16 +113,16 @@ export declare class UsersService {
         }[];
     } & {
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }) | null>;
     all(): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }[]>;
 }

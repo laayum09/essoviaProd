@@ -5,16 +5,16 @@ export declare class UsersController {
     constructor(users: UsersService);
     complete(dto: CreateUserDto): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }>;
     getUser(databaseId: string): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }>;
     getFullUser(id: string): Promise<({
@@ -92,9 +92,9 @@ export declare class UsersController {
         })[];
     } & {
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }) | null>;
     findByDiscordId(discordId: string): Promise<{
@@ -114,16 +114,16 @@ export declare class UsersController {
         }[];
     } & {
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }>;
     list(): Promise<{
         id: string;
-        databaseId: string;
         discordId: string;
         robloxId: string;
+        databaseId: string;
         credits: number;
     }[]>;
 }
