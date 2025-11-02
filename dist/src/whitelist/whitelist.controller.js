@@ -29,6 +29,18 @@ let WhitelistController = class WhitelistController {
     async list(databaseId) {
         return this.whitelist.listForUser(databaseId);
     }
+    async listAll() {
+        return this.whitelist.listAll();
+    }
+    async listNonSetup(databaseId) {
+        return this.whitelist.listNonSetup(databaseId);
+    }
+    async modify(whitelistId, body) {
+        return this.whitelist.modify(whitelistId, body);
+    }
+    async reset(body) {
+        return this.whitelist.reset(body.databaseid, body.productid);
+    }
     async revoke(whitelistId) {
         return this.whitelist.revoke(whitelistId);
     }
@@ -55,6 +67,34 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], WhitelistController.prototype, "list", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], WhitelistController.prototype, "listAll", null);
+__decorate([
+    (0, common_1.Get)('non-setup/:databaseId'),
+    __param(0, (0, common_1.Param)('databaseId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], WhitelistController.prototype, "listNonSetup", null);
+__decorate([
+    (0, common_1.Patch)('modify/:whitelistId'),
+    __param(0, (0, common_1.Param)('whitelistId')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], WhitelistController.prototype, "modify", null);
+__decorate([
+    (0, common_1.Post)('reset'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], WhitelistController.prototype, "reset", null);
 __decorate([
     (0, common_1.Delete)(':whitelistId'),
     __param(0, (0, common_1.Param)('whitelistId')),

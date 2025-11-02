@@ -25,6 +25,38 @@ export declare class WhitelistController {
         type: string;
         userid: string;
     }[]>;
+    listAll(): Promise<{
+        id: string;
+        productId: string;
+        whitelistId: string;
+        userDatabaseId: string;
+        type: string;
+        userid: string;
+    }[]>;
+    listNonSetup(databaseId: string): Promise<{
+        productId: string;
+        productName: string;
+        whitelistSetup: boolean;
+    }[]>;
+    modify(whitelistId: string, body: {
+        userid?: string;
+        type?: 'user' | 'group';
+    }): Promise<{
+        updated: {
+            id: string;
+            productId: string;
+            whitelistId: string;
+            userDatabaseId: string;
+            type: string;
+            userid: string;
+        };
+    }>;
+    reset(body: {
+        databaseid: string;
+        productid: string;
+    }): Promise<{
+        reset: boolean;
+    }>;
     revoke(whitelistId: string): Promise<{
         revoked: boolean;
     }>;

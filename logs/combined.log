@@ -411,3 +411,66 @@
 {"context":"InfraService","level":"info","message":"✅ MongoDB connected successfully"}
 {"context":"InfraService","level":"info","message":"✅ Redis connected successfully"}
 {"context":"NestApplication","level":"info","message":"Nest application successfully started"}
+{"context":"NestFactory","level":"info","message":"Starting Nest application..."}
+{"context":"InstanceLoader","level":"info","message":"AppModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"RedisModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PrismaModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"FilesModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PassportModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ConfigHostModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"WinstonModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HttpModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"JwtModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"InfraModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"OpenTelemetryCoreModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ConfigModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"LoggerModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"TerminusModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"HealthModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"CreditsModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"UsersModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"WhitelistModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"PurchasesModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"ProductsModule dependencies initialized"}
+{"context":"InstanceLoader","level":"info","message":"AuthModule dependencies initialized"}
+{"context":"RoutesResolver","level":"info","message":"HealthController {/health}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/health, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"AuthController {/auth}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/start, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/discord/callback, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/collect-roblox, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/roblox/callback, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/auth/completed, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"UsersController {/users}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/complete, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/:databaseId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/full/:id, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users/discord/:discordId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/users, GET} route"}
+{"context":"RoutesResolver","level":"info","message":"ProductsController {/products}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:productId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/products/:productId, DELETE} route"}
+{"context":"RoutesResolver","level":"info","message":"CreditsController {/credits}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/credits/set, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/credits/add, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/credits/minus, POST} route"}
+{"context":"RoutesResolver","level":"info","message":"WhitelistController {/whitelist}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/setup, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/auth, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/:databaseId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/non-setup/:databaseId, GET} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/modify/:whitelistId, PATCH} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/reset, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/whitelist/:whitelistId, DELETE} route"}
+{"context":"RoutesResolver","level":"info","message":"PurchasesController {/}:"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/buy, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/add, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/revoke, POST} route"}
+{"context":"RouterExplorer","level":"info","message":"Mapped {/owned/:databaseId, GET} route"}
+{"context":"InfraService","level":"info","message":"✅ MongoDB connected successfully"}
+{"context":"InfraService","level":"info","message":"✅ Redis connected successfully"}
+{"context":"NestApplication","level":"info","message":"Nest application successfully started"}

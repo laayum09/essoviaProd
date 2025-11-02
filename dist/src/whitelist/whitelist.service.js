@@ -49,6 +49,46 @@ let WhitelistService = class WhitelistService {
     async listForUser(databaseId) {
         return this.prisma.whitelist.findMany({ where: { userDatabaseId: databaseId } });
     }
+    async listAll() {
+        return this.prisma.whitelist.findMany();
+    }
+    async listNonSetup(databaseId) {
+        const owned = await this.prisma.userProduct.findMany({
+            where: { userDatabaseId: databaseId, whitelistSetup: false },
+            include: { product: true },
+        });
+        return owned.map((item) => ({
+            productId: item.productId,
+            productName: item.product.name,
+            whitelistSetup: false,
+        }));
+    }
+    async modify(whitelistId, data) {
+        const existing = await this.prisma.whitelist.findUnique({ where: { whitelistId } });
+        if (!existing)
+            throw new common_1.NotFoundException('Whitelist not found');
+        const updated = await this.prisma.whitelist.update({
+            where: { whitelistId },
+            data: {
+                userid: data.userid ?? existing.userid,
+                type: data.type ?? existing.type,
+            },
+        });
+        return { updated };
+    }
+    async reset(databaseId, productId) {
+        const existing = await this.prisma.whitelist.findFirst({
+            where: { userDatabaseId: databaseId, productId },
+        });
+        if (!existing)
+            throw new common_1.NotFoundException('Whitelist not found');
+        await this.prisma.whitelist.delete({ where: { whitelistId: existing.whitelistId } });
+        await this.prisma.userProduct.updateMany({
+            where: { userDatabaseId: databaseId, productId },
+            data: { whitelistSetup: false },
+        });
+        return { reset: true };
+    }
     async revoke(whitelistId) {
         const existing = await this.prisma.whitelist.findUnique({ where: { whitelistId } });
         if (!existing)
