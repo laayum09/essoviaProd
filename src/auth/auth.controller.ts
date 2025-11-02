@@ -44,49 +44,48 @@ export class AuthController {
   }
 
   // 🎮 Step 2: Discord OAuth callback
-  @Get('discord/callback')
-  async discordCallback(@Query('code') code: string, @Res() res: Response) {
-    if (!code) throw new BadRequestException('Missing Discord code');
+  // Step 2: Discord OAuth callback
+@Get('discord/callback')
+async discordCallback(@Query('code') code: string, @Res() res: Response) {
+  if (!code) throw new BadRequestException('Missing Discord code');
 
-    try {
-      const tokenResponse = await axios.post(
-        process.env.DISCORD_TOKEN_URL!,
-        new URLSearchParams({
-          client_id: process.env.DISCORD_CLIENT_ID!,
-          client_secret: process.env.DISCORD_CLIENT_SECRET!,
-          grant_type: 'authorization_code',
-          code,
-          redirect_uri: process.env.DISCORD_REDIRECT_URI!,
-        }),
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
-      );
+  try {
+    const tokenResponse = await axios.post(
+      process.env.DISCORD_TOKEN_URL!,
+      new URLSearchParams({
+        client_id: process.env.DISCORD_CLIENT_ID!,
+        client_secret: process.env.DISCORD_CLIENT_SECRET!,
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: process.env.DISCORD_REDIRECT_URI!,
+      }),
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
+    );
 
-      const userResponse = await axios.get(process.env.DISCORD_USER_URL!, {
-        headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
-      });
+    const userResponse = await axios.get(process.env.DISCORD_USER_URL!, {
+      headers: { Authorization: `Bearer ${tokenResponse.data.access_token}` },
+    });
 
-      const discordId = userResponse.data.id;
-      const discordUsername = userResponse.data.username;
+    const discordId = userResponse.data.id;
+    const discordUsername = userResponse.data.username;
 
-      // Store Discord info temporarily in Redis (expires in 5 minutes)
-      await this.redis.set(
-        `link:${discordId}`,
-        { discordId, discordUsername },
-        300,
-      );
+    await this.redis.set(
+      `link:${discordId}`,
+      { discordId, discordUsername },
+      300,
+    );
 
-      console.log(`🕓 Stored temporary Discord link for ${discordUsername} (${discordId})`);
+    console.log(`🕓 Stored temporary Discord link for ${discordUsername} (${discordId})`);
 
-      // Redirect to Roblox OAuth collector
-      return res.redirect(
-        `https://essovia.xyz/collect-roblox?discordId=${discordId}&username=${discordUsername}`,
-      );
-    } catch (err) {
-      console.error('Discord OAuth failed:', err);
-      throw new InternalServerErrorException('Discord authentication failed');
-    }
+    // ✅ FIXED: add /auth prefix
+    return res.redirect(
+      `https://essovia.xyz/auth/collect-roblox?discordId=${discordId}&username=${discordUsername}`,
+    );
+  } catch (err) {
+    console.error('Discord OAuth failed:', err);
+    throw new InternalServerErrorException('Discord authentication failed');
   }
-
+}
   // 🤖 Step 3: Redirect to Roblox OAuth
   @Get('collect-roblox')
   collectRoblox(
