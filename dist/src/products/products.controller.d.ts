@@ -1,7 +1,7 @@
-import { PrismaService } from '../infra/prisma/prisma.service';
+import { ProductsService } from './products.service';
 export declare class ProductsController {
-    private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly products;
+    constructor(products: ProductsService);
     list(): Promise<{
         id: string;
         productId: string;
@@ -26,7 +26,7 @@ export declare class ProductsController {
         createdAt: Date;
         updatedAt: Date;
     }>;
-    get(id: string): Promise<{
+    get(productId: string): Promise<{
         id: string;
         productId: string;
         name: string;
@@ -37,17 +37,8 @@ export declare class ProductsController {
         version: string | null;
         createdAt: Date;
         updatedAt: Date;
-    } | null>;
-    delete(id: string): Promise<{
-        id: string;
-        productId: string;
-        name: string;
-        priceR: number | null;
-        priceC: number | null;
-        whitelisted: boolean;
-        fileUrl: string | null;
-        version: string | null;
-        createdAt: Date;
-        updatedAt: Date;
+    }>;
+    delete(productId: string): Promise<{
+        ok: boolean;
     }>;
 }

@@ -10,13 +10,14 @@ exports.CreditsModule = void 0;
 const common_1 = require("@nestjs/common");
 const credits_service_1 = require("./credits.service");
 const credits_controller_1 = require("./credits.controller");
+const prisma_service_1 = require("../infra/prisma/prisma.service");
 let CreditsModule = class CreditsModule {
 };
 exports.CreditsModule = CreditsModule;
 exports.CreditsModule = CreditsModule = __decorate([
     (0, common_1.Module)({
-        providers: [credits_service_1.CreditsService],
         controllers: [credits_controller_1.CreditsController],
+        providers: [credits_service_1.CreditsService, prisma_service_1.PrismaService],
         exports: [credits_service_1.CreditsService],
     })
 ], CreditsModule);

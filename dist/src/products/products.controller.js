@@ -14,23 +14,36 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsController = void 0;
 const common_1 = require("@nestjs/common");
-const prisma_service_1 = require("../infra/prisma/prisma.service");
+const products_service_1 = require("./products.service");
 let ProductsController = class ProductsController {
-    prisma;
-    constructor(prisma) {
-        this.prisma = prisma;
+    products;
+    constructor(products) {
+        this.products = products;
     }
     async list() {
-        return this.prisma.product.findMany();
+        return this.products.list();
     }
     async create(body) {
-        return this.prisma.product.create({ data: body });
+        const { name, priceR, priceC, whitelisted, fileUrl } = body;
+        if (!name)
+            throw new common_1.NotFoundException('Product name is required');
+        return this.products.create({
+            name,
+            priceR,
+            priceC,
+            whitelisted: !!whitelisted,
+            fileUrl,
+        });
     }
-    async get(id) {
-        return this.prisma.product.findUnique({ where: { id } });
+    async get(productId) {
+        const product = await this.products.list();
+        const found = product.find(p => p.productId === productId);
+        if (!found)
+            throw new common_1.NotFoundException('Product not found');
+        return found;
     }
-    async delete(id) {
-        return this.prisma.product.delete({ where: { id } });
+    async delete(productId) {
+        return this.products.delete(productId);
     }
 };
 exports.ProductsController = ProductsController;
@@ -48,21 +61,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(':productId'),
+    __param(0, (0, common_1.Param)('productId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "get", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(':productId'),
+    __param(0, (0, common_1.Param)('productId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "delete", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, common_1.Controller)('products'),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [products_service_1.ProductsService])
 ], ProductsController);
 //# sourceMappingURL=products.controller.js.map

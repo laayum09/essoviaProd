@@ -60,7 +60,7 @@ let AuthController = class AuthController {
             const discordUsername = userResponse.data.username;
             await this.redis.set(`link:${discordId}`, { discordId, discordUsername }, 300);
             console.log(`🕓 Stored temporary Discord link for ${discordUsername} (${discordId})`);
-            return res.redirect(`https://essovia.xyz/collect-roblox?discordId=${discordId}&username=${discordUsername}`);
+            return res.redirect(`https://essovia.xyz/auth/collect-roblox?discordId=${discordId}&username=${discordUsername}`);
         }
         catch (err) {
             console.error('Discord OAuth failed:', err);
@@ -105,11 +105,10 @@ let AuthController = class AuthController {
         if (!discordId || !robloxId) {
             throw new common_1.BadRequestException('Missing discordId or robloxId');
         }
-        const redisDataRaw = await this.redis.get(`link:${discordId}`);
-        if (!redisDataRaw) {
+        const redisData = await this.redis.get(`link:${discordId}`);
+        if (!redisData) {
             throw new common_1.NotFoundException('Discord link expired or not found in Redis');
         }
-        const redisData = JSON.parse(redisDataRaw);
         const discordUsername = redisData.discordUsername;
         const existingDiscord = await this.prisma.user.findUnique({ where: { discordId } });
         if (existingDiscord)
