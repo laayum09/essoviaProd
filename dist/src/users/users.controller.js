@@ -30,6 +30,13 @@ let UsersController = class UsersController {
     async getFullUser(id) {
         return this.users.findFullUser(id);
     }
+    async findByDiscordId(discordId) {
+        const user = await this.users.findByDiscordId(discordId);
+        if (!user) {
+            throw new common_1.NotFoundException({ message: 'User not linked to Discord', discordId });
+        }
+        return user;
+    }
     async list() {
         return this.users.all();
     }
@@ -56,6 +63,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getFullUser", null);
+__decorate([
+    (0, common_1.Get)('discord/:discordId'),
+    __param(0, (0, common_1.Param)('discordId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findByDiscordId", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),

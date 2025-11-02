@@ -108,6 +108,15 @@ let UsersService = class UsersService {
             throw new common_1.NotFoundException('User not found');
         return user;
     }
+    async findByDiscordId(discordId) {
+        return this.prisma.user.findUnique({
+            where: { discordId },
+            include: {
+                products: true,
+                whitelists: true,
+            },
+        });
+    }
     async all() {
         return this.prisma.user.findMany({
             orderBy: { databaseId: 'asc' },

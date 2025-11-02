@@ -99,6 +99,16 @@ export class UsersService {
     return user;
   }
 
+  async findByDiscordId(discordId: string) {
+  return this.prisma.user.findUnique({
+    where: { discordId },
+    include: {
+      products: true,
+      whitelists: true,
+    },
+  });
+}
+
   async all() {
     return this.prisma.user.findMany({
       orderBy: { databaseId: 'asc' },

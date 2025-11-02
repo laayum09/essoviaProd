@@ -95,6 +95,28 @@ export declare class UsersController {
         robloxId: string;
         credits: number;
     }) | null>;
+    findByDiscordId(discordId: string): Promise<{
+        whitelists: {
+            id: string;
+            productId: string;
+            whitelistId: string;
+            userDatabaseId: string;
+            type: string;
+            userid: string;
+        }[];
+        products: {
+            id: string;
+            productId: string;
+            userDatabaseId: string;
+            whitelistSetup: boolean;
+        }[];
+    } & {
+        id: string;
+        databaseId: string;
+        discordId: string;
+        robloxId: string;
+        credits: number;
+    }>;
     list(): Promise<{
         id: string;
         databaseId: string;
