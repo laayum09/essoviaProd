@@ -81,6 +81,27 @@ export class AuthController {
     }
   }
 
+  @Get('/collect-roblox')
+collectRoblox(
+  @Query('discordId') discordId: string,
+  @Query('username') username: string,
+  @Res() res: Response,
+) {
+  if (!discordId || !username) {
+    return res.status(400).json({ error: 'Missing discordId or username' });
+  }
+
+  // Redirect user to Roblox OAuth, keeping Discord data in query
+  const robloxAuthUrl =
+    `${process.env.ROBLOX_AUTH_URL}?client_id=${process.env.ROBLOX_CLIENT_ID}` +
+    `&response_type=code` +
+    `&redirect_uri=${encodeURIComponent(process.env.ROBLOX_REDIRECT_URI!)}` +
+    `&scope=openid+profile` +
+    `&state=${encodeURIComponent(JSON.stringify({ discordId, username }))}`;
+
+  return res.redirect(robloxAuthUrl);
+}
+
   // Step 3: Roblox OAuth callback
   @Get('roblox/callback')
   async robloxCallback(@Query('code') code: string, @Res() res: Response) {
