@@ -148,55 +148,54 @@ async discordCallback(@Query('code') code: string, @Res() res: Response) {
 
   // ✅ Step 5: Final completion — create user in Prisma and clear Redis
   @Get('completed')
-  async authCompleted(
-    @Query('discordId') discordId: string,
-    @Query('robloxId') robloxId: string,
-    @Query('robloxUsername') robloxUsername: string,
-  ) {
-    if (!discordId || !robloxId) {
-      throw new BadRequestException('Missing discordId or robloxId');
-    }
+async authCompleted(
+  @Query('discordId') discordId: string,
+  @Query('robloxId') robloxId: string,
+  @Query('robloxUsername') robloxUsername: string,
+) {
+  if (!discordId || !robloxId) {
+    throw new BadRequestException('Missing discordId or robloxId');
+  }
 
-    // Fetch Discord info from Redis
-    const redisDataRaw = await this.redis.get(`link:${discordId}`);
-    if (!redisDataRaw) {
-      throw new NotFoundException('Discord link expired or not found in Redis');
-    }
+  // Fetch Discord info from Redis
+  const redisData = await this.redis.get(`link:${discordId}`);
+  if (!redisData) {
+    throw new NotFoundException('Discord link expired or not found in Redis');
+  }
 
-    const redisData = JSON.parse(redisDataRaw);
-    const discordUsername = redisData.discordUsername;
+  const discordUsername = (redisData as any).discordUsername;
 
-    // Prevent duplicate accounts
-    const existingDiscord = await this.prisma.user.findUnique({ where: { discordId } });
-    if (existingDiscord) throw new ConflictException('Discord account already linked');
+  // Prevent duplicate accounts
+  const existingDiscord = await this.prisma.user.findUnique({ where: { discordId } });
+  if (existingDiscord) throw new ConflictException('Discord account already linked');
 
-    const existingRoblox = await this.prisma.user.findUnique({ where: { robloxId } });
-    if (existingRoblox) throw new ConflictException('Roblox account already linked');
+  const existingRoblox = await this.prisma.user.findUnique({ where: { robloxId } });
+  if (existingRoblox) throw new ConflictException('Roblox account already linked');
 
-    // Generate a unique databaseId
-    let databaseId = '';
-    do {
-      databaseId = genBase36Id(14);
-    } while (await this.prisma.user.findUnique({ where: { databaseId } }));
+  // Generate unique databaseId
+  let databaseId = '';
+  do {
+    databaseId = genBase36Id(14);
+  } while (await this.prisma.user.findUnique({ where: { databaseId } }));
 
-    // Create new user in Prisma
-    const newUser = await this.prisma.user.create({
-      data: {
-        databaseId,
-        discordId,
-        robloxId,
-        credits: 0,
-      },
-    });
+  // Create user in Prisma
+  const newUser = await this.prisma.user.create({
+    data: {
+      databaseId,
+      discordId,
+      robloxId,
+      credits: 0,
+    },
+  });
 
-    // Clear Redis entry
-    await this.redis.set(`link:${discordId}`, null, 1);
+  // Clear Redis
+  await this.redis.set(`link:${discordId}`, null, 1);
 
-    console.log(`✅ User linked: ${discordUsername} (${discordId}) ↔ ${robloxUsername} (${robloxId})`);
+  console.log(`✅ User linked: ${discordUsername} (${discordId}) ↔ ${robloxUsername} (${robloxId})`);
 
-    return {
-      message: 'User successfully linked and created',
-      user: newUser,
+  return {
+    message: 'User successfully linked and created',
+    user: newUser,
     };
   }
 }
